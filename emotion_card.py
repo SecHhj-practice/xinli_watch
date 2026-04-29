@@ -65,6 +65,7 @@ def generate_emotion_card(emotion: str, quote: str) -> BytesIO:
 
     # 尝试的字体路径列表（按优先级）
     font_paths = [
+        "fonts/SourceHanSansSC-Regular.otf",
         "C:/Windows/Fonts/msyh.ttc",  # 微软雅黑
         "C:/Windows/Fonts/simhei.ttf",  # 黑体
         "C:/Windows/Fonts/simsun.ttc",  # 宋体
