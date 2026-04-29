@@ -98,15 +98,28 @@ def generate_emotion_card(emotion: str, quote: str) -> BytesIO:
 
     # 1. 顶部 emoji
     emoji_text = config["emoji"]
-    # 用默认字体绘制 emoji（PIL 的默认字体支持 emoji）
     try:
-        emoji_font = ImageFont.truetype("seguiemj.ttf", 100) if os.path.exists(
-            "C:/Windows/Fonts/seguiemj.ttf") else font_emotion
+        emoji_font_paths = [
+            "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
+            "/usr/share/fonts/google-noto-emoji/NotoColorEmoji.ttf",
+            "C:/Windows/Fonts/seguiemj.ttf",
+        ]
+        emoji_font = None
+        for path in emoji_font_paths:
+            if os.path.exists(path):
+                emoji_font = ImageFont.truetype(path, 100)
+                break
+        if emoji_font is None:
+            emoji_font = font_emotion  # 回退到普通字体
     except:
         emoji_font = font_emotion
 
-    bbox = draw.textbbox((0, 0), emoji_text, font=emoji_font)
-    emoji_width = bbox[2] - bbox[0]
+# 计算 emoji 文本宽度（使用回退字体也能估算，不影响布局）
+    try:
+        bbox = draw.textbbox((0, 0), emoji_text, font=emoji_font)
+        emoji_width = bbox[2] - bbox[0]
+    except:
+        emoji_width = 100  # 估算宽度
     draw.text(
         ((width - emoji_width) // 2, 50),
         emoji_text,
