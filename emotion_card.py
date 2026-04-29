@@ -96,37 +96,6 @@ def generate_emotion_card(emotion: str, quote: str) -> BytesIO:
 
     # ========== 绘制内容 ==========
 
-    # 1. 顶部 emoji
-    emoji_text = config["emoji"]
-    try:
-        emoji_font_paths = [
-            "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",
-            "/usr/share/fonts/google-noto-emoji/NotoColorEmoji.ttf",
-            "C:/Windows/Fonts/seguiemj.ttf",
-        ]
-        emoji_font = None
-        for path in emoji_font_paths:
-            if os.path.exists(path):
-                emoji_font = ImageFont.truetype(path, 100)
-                break
-        if emoji_font is None:
-            emoji_font = font_emotion  # 回退到普通字体
-    except:
-        emoji_font = font_emotion
-
-# 计算 emoji 文本宽度（使用回退字体也能估算，不影响布局）
-    try:
-        bbox = draw.textbbox((0, 0), emoji_text, font=emoji_font)
-        emoji_width = bbox[2] - bbox[0]
-    except:
-        emoji_width = 100  # 估算宽度
-    draw.text(
-        ((width - emoji_width) // 2, 50),
-        emoji_text,
-        fill=(60, 60, 60),
-        font=emoji_font
-    )
-
     # 2. 情绪名称（如“今天的心情：快乐”）
     emotion_display = f"「{emotion}」"
     bbox = draw.textbbox((0, 0), emotion_display, font=font_emotion)
